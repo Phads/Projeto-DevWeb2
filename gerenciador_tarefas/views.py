@@ -30,6 +30,7 @@ class TarefaCreateView(LoginRequiredMixin, CreateView) :
 
     def form_valid(self, form):
         form.instance.usuario = self.request.user
+        form.instance.email = self.request.user.email # Garante que o campo email obrigatório seja preenchido
         return super().form_valid(form) 
    
     
