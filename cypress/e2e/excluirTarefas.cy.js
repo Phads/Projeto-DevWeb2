@@ -1,15 +1,17 @@
-describe('Testes Negativos de Exclusão de Tarefa', () => {
+describe('Excluir tarefa existente', () => {
   beforeEach(() => {
-    // 1. Logar no sistema
-    cy.login('sasuke_123', '12345'); // Use suas credenciais válidas
-    cy.url().should('include', '/home'); // Confirma que o login foi bem-sucedido
-  });
+    cy.login('sasuke_123', '12345')
+  })
 
-  // --- Cenário 1: Cancelar a Exclusão ---
-  it('não deve excluir a tarefa se o usuário cancelar a ação', () => {
-    cy.get(':nth-child(1) > :nth-child(6) > .btn-danger').click()
-    cy.get('.container > form > .btn-danger').click()
+  it('Deve excluir a primeira tarefa da lista', () => {
+    cy.visit('http://127.0.0.1:8000/home')
+    cy.get('table tbody tr', { timeout: 10000 }).should('have.length.greaterThan', 0)
+      cy.get('table tbody tr:first-child td:nth-child(2)').then(($td) => {
+      const tituloTarefa = $td.text().trim()
+      cy.get(':nth-child(1) > :nth-child(6) > .btn-danger').click()
+      cy.contains('button', 'Excluir').click()
 
-  });
-
-});
+      cy.contains(tituloTarefa).should('not.exist')
+    })
+  })
+})
